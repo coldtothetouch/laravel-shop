@@ -1,3 +1,19 @@
+// Vars
+$white:    #FFF
+$purple:   #7843E9
+$pink:     #EC4176
+$dark:     #222
+$gray:     #454545
+$darkblue: #1E1F43
+$body:     #BDBECA
+$trsp:     transparent
+$trs:      .3s ease
+
+// Imports
+@use "sass:color"
+@import mixins
+@import components
+
 @mixin font($font_name, $font_style, $font_weight, $font_file)
 	@font-face
 		font-family: $font_name
@@ -11,21 +27,6 @@
 @include font('Gilroy', normal, 600, 'Gilroy-SemiBold')
 @include font('Gilroy', normal, 700, 'Gilroy-Bold')
 @include font('Gilroy', normal, 900, 'Gilroy-Black')
-
-// Vars
-$white:    #FFF
-$purple:   #7843E9
-$pink:     #EC4176
-$dark:     #222
-$gray:     #454545
-$darkblue: #1E1F43
-$body:     #BDBECA
-$trsp:     transparent
-$trs:      .3s ease
-
-// Imports
-@import mixins
-@import components
 
 // Basic rules
 ::selection

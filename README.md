@@ -25,6 +25,11 @@ docker run --rm \
 cp .env.example .env
 ```
 
+Выполните миграции
+```bash
+./vendor/bin/sail artisan:migrate
+```
+
 ### Запуск
 
 ```bash

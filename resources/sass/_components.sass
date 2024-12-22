@@ -26,20 +26,20 @@
 	background-color: $purple
 	color: $white
 	&:hover
-		background-color: darken($purple, 5%)
+		background-color: color.adjust($purple, $lightness: -5%)
 
 .btn-pink
 	box-shadow: 0px 3px 0px rgba($pink, 0.3)
 	background-color: $pink
 	color: $white
 	&:hover
-		background-color: darken($pink, 10%)
+		background-color: color.adjust($pink, $lightness: -10%)
 
 .btn-outline
 	border: 1px solid $pink
 	color: $white
 	&:hover
-		background-color: darken($pink, 10%)
+		background-color: color.adjust($pink, $lightness: -10%)
 
 
 // Form
