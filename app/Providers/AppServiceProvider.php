@@ -4,8 +4,8 @@ namespace App\Providers;
 
 use Carbon\CarbonInterval;
 use Illuminate\Cache\RateLimiting\Limit;
-use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Foundation\Http\Kernel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -23,9 +23,6 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        Model::preventLazyLoading(app()->isLocal());
-        Model::preventSilentlyDiscardingAttributes(app()->isLocal());
-
         RateLimiter::for('global', function (Request $request) {
             return Limit::perMinute(500)
                 ->by($request->user()?->id ?: $request->ip())
@@ -38,22 +35,26 @@ class AppServiceProvider extends ServiceProvider
                 });
         });
 
-        app(Kernel::class)->whenRequestLifecycleIsLongerThan(
-            CarbonInterval::seconds(4),
-            function (Request $request) {
-                logger()
-                    ->channel('telegram')
-                    ->debug('whenRequestLifecycleIsLongerThan: '.$request->url);
-            },
-        );
+        Model::shouldBeStrict(app()->isLocal());
 
-        DB::whenQueryingForLongerThan(1000, function (Connection $connection) {
-            logger()
-                ->channel('telegram')
-                ->debug(
-                    'whenQueryingForLongerThan: '.$connection->query()->toRawSql()
-                );
-        });
+        if (app()->isProduction()) {
+            app(Kernel::class)->whenRequestLifecycleIsLongerThan(
+                CarbonInterval::seconds(4),
+                function (Request $request) {
+                    logger()
+                        ->channel('telegram')
+                        ->debug('whenRequestLifecycleIsLongerThan: '.$request->url);
+                },
+            );
+
+            DB::listen(function (QueryExecuted $query) {
+                if ($query->time > 100) {
+                    logger()
+                        ->channel('telegram')
+                        ->debug('Query longer than 100ms: '.$query->toRawSql());
+                }
+            });
+        }
     }
 
 }
