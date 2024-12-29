@@ -15,5 +15,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->append(ThrottleRequests::class.':global');
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+//        $exceptions->reportable(function (Throwable $e) {
+//
+//        });
+//        $exceptions->renderable(function (Throwable $e) {
+//
+//        });
     })->create();

@@ -2,6 +2,7 @@
 
 namespace App\Services\Telegram;
 
+use App\Services\Telegram\Exceptions\TelegramException;
 use Illuminate\Support\Facades\Http;
 use Throwable;
 
@@ -15,10 +16,11 @@ class Telegram
             $response = Http::get(self::HOST.$token.'/sendMessage', [
                 'chat_id' => $chatId,
                 'text' => $message
-            ]);
+            ])->throw();
 
-            return $response['ok'] === true;
-        } catch (Throwable) {
+            return $response->json('ok') === true;
+        } catch (Throwable $e) {
+            report(new TelegramException($e->getMessage(), $e->getCode()));
             return false;
         }
     }
