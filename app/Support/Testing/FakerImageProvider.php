@@ -5,25 +5,27 @@ namespace App\Support\Testing;
 use Faker\Provider\Base;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Illuminate\Testing\Fluent\Concerns\Has;
 
 class FakerImageProvider extends Base
 {
-    public static function image(): string
+    public static function image(string $path): string
     {
         $images = Collection::make(glob(base_path('tests/Fixtures/images/products/*')));
         $randomImage = $images->random();
 
-        $path = '/images/products/'.Str::random().'.jpg';
-        $file = File::get($randomImage);
-        dd($file);
+        $name =  Str::random().'.jpg';
+        $imagePath = $path . $name;
 
-        Storage::disk('public')->put($path, $file);
-        dd(storage_path($path));
+        if (Storage::disk('public')->directoryMissing($path)) {
+            Storage::disk('public')->makeDirectory($path);
+        }
 
-        return $path;
+        $image = File::get($randomImage);
+
+        Storage::disk('public')->put($imagePath, $image);
+
+        return Str::substr(Storage::disk('public')->path($imagePath), 14);
     }
 }

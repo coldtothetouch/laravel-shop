@@ -13,7 +13,7 @@ class FakerServiceProvider extends ServiceProvider
     public function register(): void
     {
         app()->singleton(
-            Generator::class.':'.config('app.faker_locale'),
+            Generator::class,
             static function () {
                 $faker = Factory::create(config('app.faker_locale'));
                 $faker->addProvider(FakerImageProvider::class);
