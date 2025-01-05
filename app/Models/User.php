@@ -13,7 +13,6 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
     use Notifiable;
-    use HasSlug;
 
     protected $fillable = [
         'name',
@@ -25,11 +24,6 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
-
-    public static function slugFrom(): string
-    {
-        return 'name';
-    }
 
     protected function casts(): array
     {
