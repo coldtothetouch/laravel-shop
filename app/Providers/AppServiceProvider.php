@@ -35,6 +35,10 @@ class AppServiceProvider extends ServiceProvider
                 });
         });
 
+        RateLimiter::for('auth', function (Request $request) {
+            return Limit::perMinute(20)->by($request->ip());
+        });
+
         Model::shouldBeStrict(app()->isLocal());
 
         if (app()->isProduction()) {

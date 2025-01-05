@@ -12,7 +12,9 @@ Route::get('/', HomeController::class)->name('home');
 Route::as('auth.')->middleware('guest')->group(function () {
     Route::controller(LoginController::class)->group(function () {
         Route::get('/login', 'index')->name('login.index');
-        Route::post('/login', 'store')->name('login');
+        Route::post('/login', 'store')
+            ->middleware('throttle:auth')
+            ->name('login');
 
         Route::delete('/logout', 'destroy')
             ->withoutMiddleware('guest')
@@ -22,7 +24,9 @@ Route::as('auth.')->middleware('guest')->group(function () {
 
     Route::controller(RegisterController::class)->group(function () {
         Route::get('/register', 'index')->name('register.index');
-        Route::post('/register', 'store')->name('register');
+        Route::post('/register', 'store')
+            ->middleware('throttle:auth')
+            ->name('register');
     });
 
     Route::controller(ResetPasswordController::class)->group(function () {

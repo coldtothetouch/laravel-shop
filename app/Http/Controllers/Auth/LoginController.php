@@ -54,7 +54,7 @@ class LoginController extends Controller
         $user = User::updateOrCreate([
             'github_id' => $githubUser->id,
         ], [
-            'name' => $githubUser->name,
+            'name' => $githubUser->name ?? $githubUser->email,
             'email' => $githubUser->email,
             'password' => str()->random(20)
         ]);
