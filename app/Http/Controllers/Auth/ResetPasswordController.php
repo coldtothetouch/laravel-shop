@@ -35,9 +35,12 @@ class ResetPasswordController extends Controller
             }
         );
 
-        return $status === Password::PASSWORD_RESET
-            ? redirect()->route('auth.login')->with('message', __($status))
-            : back()->withErrors(['email' => [__($status)]]);
+        if ($status !== Password::PASSWORD_RESET) {
+            return back()->withErrors(['email' => [__($status)]]);
+        }
+
+        flash()->info(__($status));
+        return redirect()->route('auth.login');
     }
 
     public function sendEmail(ForgotPasswordFormRequest $request): RedirectResponse
@@ -48,9 +51,12 @@ class ResetPasswordController extends Controller
             $request->only('email')
         );
 
-        return $status === Password::RESET_LINK_SENT
-            ? back()->with(['message' => __($status)])
-            : back()->withErrors(['email' => __($status)]);
+        if ($status !== Password::RESET_LINK_SENT) {
+            return back()->withErrors(['email' => __($status)]);
+        }
+
+        flash()->info(__($status));
+        return back();
     }
 
     public function resetPassword(string $token): View
