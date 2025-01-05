@@ -2,19 +2,15 @@
 
 namespace App\Listeners;
 
+use App\Notifications\NewUserNotification;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class SendEmailToNewUser implements ShouldQueue
+class SendEmailToNewUser
 {
-    public function __construct()
-    {
-        //
-    }
-
     public function handle(Registered $event): void
     {
-        //
+        $event->user->notify(new NewUserNotification());
     }
 }
