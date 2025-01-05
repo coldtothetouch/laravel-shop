@@ -10,22 +10,18 @@ use Illuminate\Support\Str;
 
 class FakerImageProvider extends Base
 {
-    public static function image(string $path): string
+    public function fixturesImage(string $fixturesPath, string $storagePath): string
     {
-        $images = Collection::make(glob(base_path('tests/Fixtures/images/products/*')));
-        $randomImage = $images->random();
-
-        $name =  Str::random().'.jpg';
-        $imagePath = $path . $name;
-
-        if (Storage::disk('public')->directoryMissing($path)) {
-            Storage::disk('public')->makeDirectory($path);
+        if (Storage::disk('public')->directoryMissing($storagePath)) {
+            Storage::disk('public')->makeDirectory($storagePath);
         }
 
-        $image = File::get($randomImage);
+        $file = $this->generator->file(
+            base_path('tests/Fixtures/images/'.$fixturesPath),
+            Storage::disk('public')->path($storagePath),
+            false
+        );
 
-        Storage::disk('public')->put($imagePath, $image);
-
-        return Str::substr(Storage::disk('public')->path($imagePath), 14);
+        return '/storage/app/public/'.$storagePath.'/'.$file;
     }
 }
