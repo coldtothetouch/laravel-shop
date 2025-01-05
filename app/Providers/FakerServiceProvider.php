@@ -16,7 +16,7 @@ class FakerServiceProvider extends ServiceProvider
             Generator::class,
             static function () {
                 $faker = Factory::create(config('app.faker_locale'));
-                $faker->addProvider(FakerImageProvider::class);
+                $faker->addProvider(new FakerImageProvider($faker));
 
                 return $faker;
             }

@@ -10,7 +10,7 @@ class BrandFactory extends Factory
     {
         return [
             'title' => ucfirst($this->faker->words(2, true)),
-            'thumbnail' => '',
+            'thumbnail' => $this->faker->fixturesImage('brands', 'images/brands'),
         ];
     }
 }
