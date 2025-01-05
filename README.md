@@ -45,5 +45,5 @@ cp .env.example .env
 
 Данные для входа в аккаунт тестового пользователя
 
-Эл. почта: `test@test.com`  
+Эл. почта: `test@example.com`  
 Пароль: `password`
