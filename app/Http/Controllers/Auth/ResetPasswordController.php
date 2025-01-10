@@ -40,7 +40,7 @@ class ResetPasswordController extends Controller
         }
 
         flash()->info(__($status));
-        return redirect()->route('auth.login');
+        return redirect()->route('auth.login.index');
     }
 
     public function sendEmail(ForgotPasswordFormRequest $request): RedirectResponse
