@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\RegisterFormRequest;
-use App\Models\User;
-use Illuminate\Auth\Events\Registered;
+use Domains\Auth\Contracts\RegisterUserContract;
+use Domains\Auth\DataTransferObjects\RegisterUserDTO;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
@@ -16,18 +16,9 @@ class RegisterController extends Controller
         return view('auth.register');
     }
 
-    public function store(RegisterFormRequest $request)
+    public function store(RegisterUserContract $action, Request $request): RedirectResponse
     {
-        $data = $request->validated();
-
-        $user = User::query()->create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
-
-        event(new Registered($user));
-        auth()->login($user);
+        $action(RegisterUserDTO::fromRequest($request));
 
         return redirect()->route('home');
     }

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ForgotPasswordFormRequest;
 use App\Http\Requests\ResetPasswordFormRequest;
-use App\Models\User;
+use Domains\Auth\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -15,9 +15,9 @@ use Illuminate\Support\Str;
 
 class ResetPasswordController extends Controller
 {
-    public function forgotPassword()
+    public function index(string $token): View
     {
-        return view('auth.forgot-password');
+        return view('auth.reset-password', compact('token'));
     }
 
     public function store(ResetPasswordFormRequest $request): RedirectResponse
@@ -41,26 +41,5 @@ class ResetPasswordController extends Controller
 
         flash()->info(__($status));
         return redirect()->route('auth.login.index');
-    }
-
-    public function sendEmail(ForgotPasswordFormRequest $request): RedirectResponse
-    {
-        $request->validated();
-
-        $status = Password::sendResetLink(
-            $request->only('email')
-        );
-
-        if ($status !== Password::RESET_LINK_SENT) {
-            return back()->withErrors(['email' => __($status)]);
-        }
-
-        flash()->info(__($status));
-        return back();
-    }
-
-    public function resetPassword(string $token): View
-    {
-        return view('auth.reset-password', compact('token'));
     }
 }

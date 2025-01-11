@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Listeners\SendEmailToNewUser;
-use App\Models\User;
 use App\Notifications\NewUserNotification;
+use Domains\Auth\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
