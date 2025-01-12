@@ -21,7 +21,9 @@ return Application::configure(basePath: dirname(__DIR__))
 //        $exceptions->reportable(function (Throwable $e) {
 //
 //        });
-//        $exceptions->renderable(function (Throwable $e) {
-//
-//        });
+        $exceptions->renderable(function (DomainException $e) {
+            flash()->alert($e->getMessage());
+
+            return back();
+        });
     })->create();
