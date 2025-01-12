@@ -41,28 +41,6 @@ class LoginController extends Controller
 
         return redirect()->route('home');
     }
-
-    public function github()
-    {
-        return Socialite::driver('github')->redirect();
-    }
-
-    public function githubCallback()
-    {
-        $githubUser = Socialite::driver('github')->user();
-
-        $user = User::updateOrCreate([
-            'github_id' => $githubUser->id,
-        ], [
-            'name' => $githubUser->name ?? $githubUser->email,
-            'email' => $githubUser->email,
-            'password' => str()->random(20)
-        ]);
-
-        Auth::login($user);
-
-        return redirect()->intended(route('home'));
-    }
 }
 
 

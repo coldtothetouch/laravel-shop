@@ -10,7 +10,7 @@ class Telegram
 {
     public const HOST = 'https://api.telegram.org/bot';
 
-    public static function sendMessage(string $token, int $chatId, string $message): bool
+    public static function sendMessage(string $token, string $chatId, string $message): bool
     {
         try {
             $response = Http::get(self::HOST.$token.'/sendMessage', [

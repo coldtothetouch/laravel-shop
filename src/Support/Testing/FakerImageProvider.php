@@ -19,6 +19,6 @@ class FakerImageProvider extends Base
             false
         );
 
-        return '/storage/app/public/'.$storagePath.'/'.$file;
+        return '/storage/'.$storagePath.'/'.$file;
     }
 }

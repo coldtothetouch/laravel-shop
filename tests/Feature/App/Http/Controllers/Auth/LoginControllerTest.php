@@ -40,24 +40,6 @@ class LoginControllerTest extends TestCase
         $response->assertRedirect(route('home'));
     }
 
-
-    public function test_user_is_redirected_to_github()
-    {
-        $response = $this->get(action([LoginController::class, 'github']));
-
-        $response->assertRedirect();
-    }
-
-//    public function test_user_can_login_via_github()
-//    {
-//        $response = $this->get(action([LoginController::class, 'githubCallback']));
-//
-//        Socialite::shouldReceive('driver')
-//            ->once()
-//            ->with('github')
-//            ->andReturn(Socialite::shouldReceive('user')->once());
-//    }
-
     public function test_user_can_logout()
     {
         $user = User::factory()->create();

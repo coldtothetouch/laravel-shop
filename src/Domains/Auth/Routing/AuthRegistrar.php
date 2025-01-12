@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\Auth\SocialAuthController;
 use Illuminate\Support\Facades\Route;
 
 class AuthRegistrar implements RouteRegistrarContract
@@ -26,14 +27,16 @@ class AuthRegistrar implements RouteRegistrarContract
                 Route::delete('/logout', 'destroy')
                     ->middleware('auth')
                     ->name('logout');
+            });
 
-                Route::get('/auth/github/redirect', 'github')
+            Route::controller(SocialAuthController::class)->as('auth.')->group(function () {
+                Route::get('/auth/{driver}/redirect', 'redirect')
                     ->middleware('guest')
-                    ->name('github.redirect');
+                    ->name('social.redirect');
 
-                Route::get('/auth/github/callback', 'githubCallback')
+                Route::get('/auth/{driver}/callback', 'callback')
                     ->middleware('guest')
-                    ->name('github.callback');
+                    ->name('social.callback');
             });
 
             Route::controller(RegisterController::class)->as('auth.')->group(function () {
