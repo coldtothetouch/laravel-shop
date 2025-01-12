@@ -20,6 +20,10 @@ return new class extends Migration
 
             $table->string('thumbnail')->nullable();
 
+            $table->boolean('on_home_page')->default(false);
+
+            $table->integer('sorting')->default(999);
+
             $table->unsignedInteger('price')->default(0);
 
             $table->foreignIdFor(Brand::class)
