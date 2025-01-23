@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace Tests\Feature\App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Auth\ResetPasswordController;
 use Domains\Auth\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Password;
 use Support\Flash\Flash;
 use Tests\TestCase;
 
 class ResetPasswordControllerTest extends TestCase
 {
+
     use RefreshDatabase;
 
     public function test_user_can_visit_reset_password_page()
@@ -23,7 +23,7 @@ class ResetPasswordControllerTest extends TestCase
 
         $response = $this->get(action(
             [ResetPasswordController::class, 'index'],
-            $token
+            $token,
         ));
 
         $response
@@ -35,14 +35,16 @@ class ResetPasswordControllerTest extends TestCase
     {
         Event::fake();
 
-        $user = User::factory()->create();
+        $user  = User::factory()->create();
         $token = Password::createToken(User::first());;
         $newPassword = 'new_password';
 
-        $response = $this->post(action([ResetPasswordController::class, 'store']), [
-            'token' => $token,
-            'email' => $user->email,
-            'password' => $newPassword,
+        $response = $this->post(action([
+            ResetPasswordController::class, 'store',
+        ]), [
+            'token'                 => $token,
+            'email'                 => $user->email,
+            'password'              => $newPassword,
             'password_confirmation' => $newPassword,
         ]);
 
@@ -55,4 +57,5 @@ class ResetPasswordControllerTest extends TestCase
             ->assertRedirect(route('auth.login.index'))
             ->assertSessionHas(Flash::MESSAGE_KEY);
     }
+
 }

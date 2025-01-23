@@ -2,17 +2,19 @@
 
 namespace App\Models;
 
-use App\Traits\HasSlug;
+use App\Traits\Models\HasImage;
+use App\Traits\Models\HasSlug;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Builder;
 
 class Product extends Model
 {
     use HasFactory;
     use HasSlug;
+    use HasImage;
 
     protected $fillable = [
         'slug',
@@ -38,6 +40,11 @@ class Product extends Model
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class);
+    }
+
+    protected function imageDirectory(): string
+    {
+        return 'products';
     }
 
 }

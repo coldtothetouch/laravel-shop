@@ -1,14 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace Tests\Feature\App\Http\Controllers\Auth;
 
-use App\Listeners\SendEmailToNewUser;
-use App\Notifications\NewUserNotification;
-use Domains\Auth\Models\User;
-use Illuminate\Auth\Events\Registered;
+use App\Http\Controllers\Auth\SocialAuthController;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
 class SocialAuthControllerTest extends TestCase

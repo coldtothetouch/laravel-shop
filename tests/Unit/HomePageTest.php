@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Unit;
+
 use App\Http\Controllers\HomeController;
 use Tests\TestCase;
 

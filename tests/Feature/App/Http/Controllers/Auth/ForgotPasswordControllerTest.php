@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace Tests\Feature\App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use Domains\Auth\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Notifications\ResetPassword;

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace Tests\Feature\App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Auth\RegisterController;
 use App\Listeners\SendEmailToNewUser;
 use App\Notifications\NewUserNotification;
 use Domains\Auth\Models\User;

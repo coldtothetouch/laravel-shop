@@ -1,9 +1,9 @@
 <?php
 
-namespace Services\Telegram;
+namespace Tests\Unit\Services\Telegram;
 
-use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Http;
+use Services\Telegram\Telegram;
 use Tests\TestCase;
 
 class TelegramTest extends TestCase
