@@ -6,9 +6,14 @@ use Illuminate\Support\Facades\Http;
 use Services\Telegram\Exceptions\TelegramException;
 use Throwable;
 
-class Telegram
+class Telegram implements TelegramContract
 {
     public const HOST = 'https://api.telegram.org/bot';
+
+    public static function fake(): TelegramFake
+    {
+        return app()->instance(TelegramContract::class, new TelegramFake);
+    }
 
     public static function sendMessage(string $token, string $chatId, string $message): bool
     {

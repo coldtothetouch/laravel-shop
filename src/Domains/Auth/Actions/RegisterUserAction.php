@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 
 class RegisterUserAction implements RegisterUserContract
 {
-    public function __invoke(RegisterUserDTO $dto): void
+    public function __invoke(RegisterUserDTO $dto): User
     {
         $user = User::query()->create([
             'name' => $dto->name,
@@ -19,6 +19,7 @@ class RegisterUserAction implements RegisterUserContract
         ]);
 
         event(new Registered($user));
-        auth()->login($user);
+
+        return $user;
     }
 }

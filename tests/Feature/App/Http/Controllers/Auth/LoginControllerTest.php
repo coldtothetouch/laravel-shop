@@ -17,28 +17,42 @@ class LoginControllerTest extends TestCase
 
         $response
             ->assertOk()
+            ->assertSee('Вход в аккаунт')
             ->assertViewIs('auth.login');
     }
 
     public function test_user_can_login()
     {
+        $password = '1234567890';
+
         $credentials = [
             'email' => 'test@example.com',
-            'password' => 'password',
+            'password' => bcrypt($password),
         ];
 
-        $user = User::factory($credentials)->create();
+        $user = User::factory()->create($credentials);
 
         $response = $this->post(
-            action([LoginController::class, 'store']),
-            $credentials
+            action([LoginController::class, 'store']), [
+                'email' => $user->email,
+                'password' => $password,
+            ]
         );
 
-        $response->assertValid();
+        $response->assertValid()
+            ->assertRedirect(route('home'));
 
         $this->assertAuthenticatedAs($user);
+    }
 
-        $response->assertRedirect(route('home'));
+    public function test_validation_fail_on_email()
+    {
+        $this->post(action([LoginController::class, 'store']), [
+            'email' => 'notfound@dirtyanimals.ru',
+            'password' => '1234567890',
+        ])->assertInvalid(['email']);
+
+        $this->assertGuest();
     }
 
     public function test_user_can_logout()

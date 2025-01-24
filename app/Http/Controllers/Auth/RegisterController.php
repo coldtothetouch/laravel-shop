@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\RegisterFormRequest;
 use Domains\Auth\Contracts\RegisterUserContract;
 use Domains\Auth\DataTransferObjects\RegisterUserDTO;
 use Illuminate\Contracts\View\View;
@@ -16,9 +17,11 @@ class RegisterController extends Controller
         return view('auth.register');
     }
 
-    public function store(RegisterUserContract $action, Request $request): RedirectResponse
+    public function store(RegisterUserContract $action, RegisterFormRequest $request): RedirectResponse
     {
-        $action(RegisterUserDTO::fromRequest($request));
+        $user = $action(RegisterUserDTO::fromRequest($request));
+
+        auth()->login($user);
 
         return redirect()->route('home');
     }

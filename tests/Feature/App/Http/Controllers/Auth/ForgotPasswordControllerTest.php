@@ -4,46 +4,59 @@ namespace Tests\Feature\App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use Domains\Auth\Models\User;
-use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\Password;
 use Support\Flash\Flash;
 use Tests\TestCase;
 
 class ForgotPasswordControllerTest extends TestCase
 {
+
     use RefreshDatabase;
+
+    private function testingCredentials()
+    {
+        return [
+            'email' => 'test@example.com',
+        ];
+    }
 
     public function test_user_can_visit_forgot_password_page()
     {
-        $response = $this->get(action([ForgotPasswordController::class, 'index']));
-
-        $response
+        $this
+            ->get(action([ForgotPasswordController::class, 'index']))
             ->assertOk()
             ->assertViewIs('auth.forgot-password');
     }
 
     public function test_user_receives_reset_password_letter()
     {
-        Notification::fake();
+        $user = User::factory()->create();
 
-        $user = User::factory([
-            'email' => 'test@example.com',
-        ])->create();
-
-        $response = $this->post(action([ForgotPasswordController::class, 'store']), [
-            'email' => $user->email,
-        ]);
-
-        $response->assertValid();
+        $this
+            ->post(
+                action([ForgotPasswordController::class, 'store']),
+                $this->testingCredentials(),
+            )
+            ->assertValid()
+            ->assertSessionHas(Flash::MESSAGE_KEY);
 
         Notification::assertSentTo($user, ResetPassword::class);
-
-        $response
-            ->assertSessionHas(Flash::MESSAGE_KEY);
     }
+
+    public function test_validation_fails_on_email()
+    {
+        $this->assertDatabaseMissing('users', $this->testingCredentials());
+
+        $this
+            ->post(
+                action([ForgotPasswordController::class, 'store']),
+                $this->testingCredentials(),
+            )
+            ->assertInvalid(['email']);
+
+        Notification::assertNothingSent();
+    }
+
 }

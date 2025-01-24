@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
+use Services\Telegram\Telegram;
+use Services\Telegram\TelegramContract;
 use Symfony\Component\HttpFoundation\Response as Response;
 
 class AppServiceProvider extends ServiceProvider
@@ -18,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
 
     public function register(): void
     {
-        //
+        app()->bind(TelegramContract::class, Telegram::class);
     }
 
     public function boot(): void

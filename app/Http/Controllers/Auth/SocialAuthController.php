@@ -7,6 +7,7 @@ use DomainException;
 use Domains\Auth\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Socialite\Facades\Socialite;
 use Throwable;
 
@@ -29,12 +30,12 @@ class SocialAuthController extends Controller
 
         $socialUser = Socialite::driver($driver)->user();
 
-        $user = User::updateOrCreate([
-            $driver.'_id' => $socialUser->id,
+        $user = User::query()->updateOrCreate([
+            $driver.'_id' => $socialUser->getId(),
         ], [
-            'name' => $socialUser->name ?? $socialUser->email,
-            'email' => $socialUser->email,
-            'password' => str()->random(20)
+            'name' => $socialUser->getName() ?? $socialUser->getEmail(),
+            'email' => $socialUser->getEmail(),
+            'password' => Hash::make(str()->random(20)),
         ]);
 
         Auth::login($user);

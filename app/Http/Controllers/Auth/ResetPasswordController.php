@@ -23,7 +23,7 @@ class ResetPasswordController extends Controller
     public function store(ResetPasswordFormRequest $request): RedirectResponse
     {
         $status = Password::reset(
-            $request->validated(),
+            $request->only('email', 'password', 'password_confirmation', 'token'),
             function (User $user, string $password) {
                 $user->forceFill([
                     'password' => Hash::make($password)
